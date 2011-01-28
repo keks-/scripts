@@ -12,19 +12,21 @@ import sys
 
 from imdb import IMDb
 
-ia = IMDb() # get all infos from the interwebz
+# getting all infos from the interwebz
+# lxhtml parser throws bunch of warnings => using beautifulsoup
+ia = IMDb('http', useModule='beautifulsoup')
 
 # TODO: Maybe some avi file search here?
 # for now getting the movie title from user
 
 def search(title):
-    # the actual search in imdb, returns array of hits
+    # the actual search in imdb; returns array of hits
     movie_results = ia.search_movie(title)
 
     counter = 1
     for item in movie_results:
-        print(str(counter) + ' ' * 2 + item['long imdb canonical title'], \
-                item.movieID)
+        print str(counter) + ' ' * 2 + item['long imdb canonical title'], \
+                item.movieID
         counter += 1
     print '\n'
     get_infos = raw_input('Enter numbers of movies to dump into txt file: ')
@@ -32,7 +34,6 @@ def search(title):
     movies_to_get = list()
     for i in get_infos.split():
         movies_to_get.append(movie_results[int(i) - 1])
-    print movies_to_get
 
     fobj = open('Movies.txt', 'a')
     for movie in movies_to_get:
@@ -40,9 +41,16 @@ def search(title):
         ia.update(movie)
         title = movie['long imdb canonical title']
         #director = movie['director']
-        rating = movie['rating']
-        runtime = movie['runtime']
-        fobj.write(title + '\n' + str(rating) + '   ' + unicode(runtime) + '\n')
+        try:
+            rating = str(movie['rating'])
+        except KeyError, e:
+            rating = 'NA'
+        try:
+            runtime = unicode(movie['runtime'][0])
+        except KeyError, e:
+            runtime = 'NA'
+        fobj.write(title + '\n' + 'Rating: ' + rating + '\n'
+                + 'Runtime: ' + runtime + ' min' + '\n' * 2)
 
     fobj.close()
     print 'ADDED'
