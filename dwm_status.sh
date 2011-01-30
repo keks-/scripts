@@ -51,7 +51,7 @@ battery() {
 
 # piping done here(?!)
 if [ -e "/proc/acpi/battery/" ]; then
-    xsetroot -name "$(battery) | tmp $(temp)°C | vol $(vol) | $(dat)"
+    xsetroot -name "$(battery) | $(temp)°C | vol $(vol) | $(dat)"
 else
     xsetroot -name "$(temp)°C | vol $(vol) | $(dat)"
 fi
