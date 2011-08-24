@@ -1,10 +1,15 @@
-#!/bin/sh
-
-# outputs vital infos to show in the dwm statusbar 
-# special treatment for notebooks 
-# temp is done via lm_sensors due to compatibility
-# TODO: cleanup, more elegant style to determine Master channels
-#       add colors via statuscolors patch
+#!/usr/bin/env bash
+#----------------------------------------------------
+# Author:       Max "keks" Fischer
+#
+# License:      Beerware
+#----------------------------------------------------
+# Vital infos for the dwm statusbar
+#----------------------------------------------------
+# NOTE:
+# Using lm_sensors to determine temp.
+# TODO: more elegant way to determine Master
+# 		channels. Cleanup(?).
 
 dat() {
     dat=$(date '+%a %d.%m.%y - %H:%M')
@@ -13,7 +18,7 @@ dat() {
 
 vol() {
     mixer=$(amixer info | awk '/Realtek\ ALC888.*/ { print }')
-    if [ -z "$mixer" ]; then
+    if [[ -z "$mixer" ]]; then
         volume=$(amixer get Master | sed -n 's/ Front Right: Playback [0-9]\+ \[\([0-9%]\+\)\].*/\1/p')
     else
         volume=$(amixer get Master | sed -n 's/ Mono: Playback [0-9]\+ \[\([0-9%]\+\)\].*/\1/p')
@@ -36,12 +41,12 @@ battery() {
     INPUT=$(acpi -b)
     STRING=$(echo $INPUT | sed -e 's/\(^ *[^ ]*\) \([^ ]*\) \([A-Z][a-z]*\), \([0-9]*%\).*$/\3 \4/')
     FIRST=$(echo $STRING | cut -c 1)
-      
-    if [ "$FIRST" = "F" ]; then
+
+    if [[ "$FIRST" = "F" ]]; then
         STRING=$(echo $STRING | sed -e 's/\(^ *[^ ]*\) \([^ ]*\)$/\\:D\/ \2/')
-    elif [ "$FIRST" = "D" ]; then
+    elif [[ "$FIRST" = "D" ]]; then
         STRING=$(echo $STRING | sed -e 's/\(^ *[^ ]*\) \([^ ]*\)$/:E \2/')
-    elif [ "$FIRST" = "C" ]; then
+    elif [[ "$FIRST" = "C" ]]; then
         STRING=$(echo $STRING | sed -e 's/\(^ *[^ ]*\) \([^ ]*\)$/:> \2/')
     else 
         STRING=$(echo $STRING | sed -e 's/\(^ *[^ ]*\) \([^ ]*\)$/:o \2/')
@@ -50,10 +55,10 @@ battery() {
 }
 
 # piping done here(?!)
-if [ -e "/proc/acpi/battery/" ]; then
+if [[ -e "/proc/acpi/battery/" ]]; then
     xsetroot -name "$(battery) | $(temp)°C | vol $(vol) | $(dat)"
 else
     xsetroot -name "$(temp)°C | vol $(vol) | $(dat)"
 fi
 
-exit
+exit 0

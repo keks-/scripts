@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#----------------------------------------------------
+# Author:       Max "keks" Fischer
+#
+# License:      Beerware
+#----------------------------------------------------
+# Update automagic all AUR packages
+#----------------------------------------------------
+# NOTE:
+# Using cower
+# TODO:
+# Make it work!
+
+error() { echo -e "\e[1;31m$1\e[0;39;49m"; }
+
+if [[ ! -x "/usr/bin/cower" ]]; then
+	echo "Dependency cower is missing"
+	exit 1
+fi
+
+for i in $(pacman -Qm | awk '{ print $1 }'); do
+	VERSION=$(cower -i --format %v $i 2> /dev/null)
+	if [[ -z $VERSION ]]; then
+		error "error: $i not found in AUR"
+	elif [[ $(pacman -Q $i | awk '{ print $2 }') != $VERSION ]]; then
+
+	fi
+done
+exit 0
