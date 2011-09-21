@@ -10,15 +10,20 @@
 # Using cower
 # TODO:
 # Make it work!
+# Test if user has sudo rights
 
 # Print string arg. in appropriate error style formating on stdout
 error() { echo -e "\e[1;31m$1\e[0;39;49m"; }
 
+# Print string arg in distinctive but not alert style
+brown() { echo -e "\e[0;33m$1\e[0;39;49m"; }
+
 
 fetch_answer() {
 	while true; do
-		read -p "$1" answer
+		read -p "$(brown "$1")" answer
 		answer=$(echo "$answer" | tr 'A-Z' 'a-z')
+		echo "$answer"
 		if [[ -z $answer || $answer = "y" ]]; then
 			return 0;
 		elif [[ $answer = "n" ]]; then
@@ -33,6 +38,11 @@ if [[ ! -x "/usr/bin/cower" ]]; then
 	exit 1
 fi
 
+if [[ ! -d $HOME/abs ]]; then
+	mkdir $HOME/abs
+fi
+cd $HOME/abs
+
 for i in $(pacman -Qm | awk '{ print $1 }'); do
 	VERSION=$(cower -i --format %v $i 2> /dev/null)
 	CURVERSION=$(pacman -Q $i | awk '{ print $2 }')
@@ -40,8 +50,16 @@ for i in $(pacman -Qm | awk '{ print $1 }'); do
 		error "error: $i not found in AUR"
 		continue
 	elif [[ $CURVERSION != $VERSION ]]; then
-		if [[ $(fetch_answer "update $i? [Y/n]: ") -eq 0 ]]; then
-			echo update!
+		update=$(fetch_answer "update "$i"? [Y/n]: ")
+		if [[ -z $update || $update = "y" ]]; then
+			cower -d -f "$i" && cd "$i" && makepkg -sf && sudo pacman -U \
+			"${i}-${VERSION}-$(uname -m).pkg.tar.xz" && cd ..
+			clean_up=$(fetch_answer "remove build directory $i? [Y/n]: ")
+			if [[ -z $clean_up || $clean_up = "y" ]]; then
+				rm -rf "$i"
+			fi
+		else
+			continue
 		fi
 	fi
 done
