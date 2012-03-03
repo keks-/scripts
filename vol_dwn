@@ -1,0 +1,3 @@
+#!/bin/sh
+
+amixer -c 0 -q sset Master playback 1dB-
