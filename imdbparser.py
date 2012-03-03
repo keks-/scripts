@@ -1,9 +1,15 @@
 #!/usr/bin/env python2.7
-
-"""
-Script for getting infos about movies straight from imdb
-Usage of IMDbPY restricts python 2.7
-"""
+#----------------------------------------------------
+# Author:       Max "keks" Fischer
+#
+# License:      Beerware
+#----------------------------------------------------
+# Getting movie infos straight from imdb
+#----------------------------------------------------
+# NOTE:
+# Usage of IMDbPY restricts python 2.7
+# TODO: Maybe some avi file search here?
+# for now getting the movie title from user
 
 import os
 import imdb
@@ -16,10 +22,7 @@ from imdb import IMDb
 # lxhtml parser throws bunch of warnings => using beautifulsoup
 ia = IMDb('http', useModule='beautifulsoup')
 
-# TODO: Maybe some avi file search here?
-# for now getting the movie title from user
-
-def search(title):
+def search_imdb(title):
     # the actual search in imdb; returns array of hits
     movie_results = ia.search_movie(title)
 
@@ -59,7 +62,7 @@ def search(title):
 def main():
     title = raw_input('Enter movie title, enter nothing to quit\n>: ')
     if len(title) is not 0:
-        search(title)
+        search_imdb(title)
     else:
         sys.exit()
 

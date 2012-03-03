@@ -55,7 +55,7 @@ battery() {
 }
 
 # piping done here(?!)
-if [[ -e "/proc/acpi/battery/" ]]; then
+if [[ -e "/sys/class/power_supply/BAT0" ]]; then
     xsetroot -name "$(battery) | $(temp)°C | vol $(vol) | $(dat)"
 else
     xsetroot -name "$(temp)°C | vol $(vol) | $(dat)"
