@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+DIR="$HOME/.vim/bundle"
+
+if [[ -d "$DIR" ]]; then
+	cd "$DIR"
+	for i in *
+	do
+		cd "$i" && git pull origin master && cd ..
+	done
+	exit 0
+fi
+exit 1
