@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 
-DIR="$HOME/.vim/bundle"
+CURDIR=$(pwd)
+DIR="$HOME/.vim/bundle/"
+plugins=("git://github.com/scrooloose/nerdtree.git"
+		 "git://github.com/kien/rainbow_parentheses.vim.git"
+		 "git://github.com/nvie/vim-flake8.git"
+		 "git://gitorious.org/vim-gnupg/vim-gnupg.git"
+		 "git://github.com/vim-scripts/sudo.vim.git"
+		 "git://github.com/vim-scripts/taglist.vim.git"
+		 "git://vim-latex.git.sourceforge.net/gitroot/vim-latex/vim-latex"
+		 "git://github.com/tpope/vim-fugitive.git")
 
-if [[ -d "$DIR" ]]; then
-	cd "$DIR"
-	for i in *
-	do
-		cd "$i" && git pull origin master && cd ..
-	done
-	exit 0
-fi
-exit 1
+cd "$DIR"
+echo "removing everything in $DIR!"
+rm -rf *
+echo "rm -rf * in $(pwd)"
+for plugin in "${plugins[@]}"
+do
+	git clone "$plugin"
+done
+cd "$CURDIR"
