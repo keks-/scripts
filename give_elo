@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+URL="http://www.qlranks.com/duel/player/$1"
+OUTPUT=$(curl -s "$URL" |  grep "PlayerCurrentElo" | sed 's/^.*PlayerCurrentElo..\([0-9]* \).*$/Player ELO:\1/')
+echo "$OUTPUT"
