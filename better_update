@@ -11,20 +11,24 @@ which git >/dev/null || {
 
 PATHOGEN_DIR="${HOME}/.vim/autoload"
 BUNDLES_DIR="${HOME}/.vim/bundle"
+DOTFILES_DIR="${HOME}/git/dotfiles"
 
 if [[ -d "${PATHOGEN_DIR}" ]]; then
   echo "Updating pathogen..."
-  curl -Sso "${PATHOGEN_DIR}/pathogen.vim" \
-    https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+  curl -LSso "${PATHOGEN_DIR}/pathogen.vim" https://tpo.pe/pathogen.vim
 fi
 
-if [[ -d "${BUNDLES_DIR}" ]]; then
-  echo "Updating bundles..."
-  for bundle in "${BUNDLES_DIR}/"*; do
-    if [[ -d "${bundle}/.git" ]]; then
-      echo "Bundle: ${bundle}..."
-      cd "${bundle}"
-      git pull
-    fi
-  done
-fi
+# Submodules..
+cd ${DOTFILES_DIR} && git submodule update --remote --merge
+
+# No submodules..
+#if [[ -d "${BUNDLES_DIR}" ]]; then
+#  echo "Updating bundles..."
+#  for bundle in "${BUNDLES_DIR}/"*; do
+#    if [[ -d "${bundle}/.git" ]]; then
+#      echo "Bundle: ${bundle}..."
+#      cd "${bundle}"
+#      git pull
+#    fi
+#  done
+#fi
