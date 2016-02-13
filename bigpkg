@@ -19,6 +19,8 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #   Credits: Allan McRae for the initial script. markbabc and Karol for contributions
+#   
+#   Patched to work with Pacman >= 4.2 by Gianluca Fiore
 #
 
 import os, re
@@ -78,9 +80,12 @@ pkg_provides = {}
 pkg_size = {}
 
 for dir in os.listdir(LOCAL_DB_PATH):
-    pkg = dir[0:dir.rfind("-",0,dir.rfind("-"))]
-    pkg_list.append(pkg)
-    parse_package_info(pkg, dir)
+    try:
+        pkg = dir[0:dir.rfind("-",0,dir.rfind("-"))]
+        pkg_list.append(pkg)
+        parse_package_info(pkg, dir)
+    except NotADirectoryError:
+        pass
 
 pkg_deptree = {}
 
@@ -122,3 +127,4 @@ print("      SIZE       PKG")
 for pkg in range(len(pkg_usage)):
     print("{0}".format(adjust_space(pkg_usage[pkg][1], find_pkg_size(round(pkg_usage[pkg][0])))))
 print("      SIZE       PKG")
+
