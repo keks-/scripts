@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Requires GNU sort due to -h
+du -hsx * | sort -rh | head -10
