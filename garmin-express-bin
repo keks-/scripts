@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+WINEPREFIX=/home/"$USER"/GarminExpress wine explorer /desktop=garmin,1366x768 '/home/$USER/GarminExpress/drive_c/Program Files/Garmin/Express/express.exe'
